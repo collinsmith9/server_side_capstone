@@ -8,3 +8,7 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ('id', 'category')
         depth = 1
 
+class CreateCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['category']

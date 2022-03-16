@@ -1,4 +1,4 @@
-from .category_serializer import CategorySerializer
+from .category_serializer import CategorySerializer, CreateCategorySerializer
 from .post_serializer import PostSerializer, CreatePostSerializer, PostLikesSerializer, PostCommentsSerializer, CreatePostCommentsSerializer
 from .event_serializer import EventSerializer, CreateEventSerializer, EventLikesSerializer, EventCommentsSerializer, CreateEventCommentsSerializer, EventTypeSerializer
 from .siteUser_serializer import UserSerializer
