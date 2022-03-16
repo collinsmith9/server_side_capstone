@@ -12,6 +12,7 @@ from astronomyserverapi.models import Post
 from django.core.files.base import ContentFile
 import base64
 import uuid
+from astronomyserverapi.models import siteUser
 
 
 
@@ -32,14 +33,16 @@ class PostView(ViewSet):
 
     def create(self, request):
         try:
+            theuser = siteUser.objects.get(pk=request.data["user"])
             format, imgstr = request.data["post_pic"].split(';base64,')
             ext = format.split('/')[-1]
-            data = ContentFile(base64.b64decode(imgstr), name=f'{request.data["username"]}-{uuid.uuid4()}.{ext}')
+            data = ContentFile(base64.b64decode(imgstr), name=f'{request.data["user"]}-{uuid.uuid4()}.{ext}')
             post = Post.objects.create(
-                user = request.data["user"],
+                user = theuser,
                 caption = request.data["caption"],
                 post_pic = data
             )
+            return Response(None, status=status.HTTP_201_CREATED)
         except ValidationError as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
 

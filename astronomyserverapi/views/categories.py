@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import serializers, status
 from rest_framework.decorators import action
 from astronomyserverapi.models import Category
-from astronomyserverapi.serializers import CategorySerializer
+from astronomyserverapi.serializers import CategorySerializer, CreateCategorySerializer
 
 
 class CategoryView(ViewSet):
@@ -19,3 +19,9 @@ class CategoryView(ViewSet):
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data)
+
+    def create(self, request):
+        serializer = CreateCategorySerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
