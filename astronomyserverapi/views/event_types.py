@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import serializers, status
 from rest_framework.decorators import action
 from astronomyserverapi.models import EventType
-from astronomyserverapi.serializers import EventTypeSerializer
+from astronomyserverapi.serializers import EventTypeSerializer, CreateEventTypeSerializer
 
 
 class EventTypeView(ViewSet):
@@ -19,3 +19,9 @@ class EventTypeView(ViewSet):
         event_types = EventType.objects.all()
         serializer = EventTypeSerializer(event_types, many=True)
         return Response(serializer.data)
+
+    def create(self, request):
+        serializer = CreateEventTypeSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

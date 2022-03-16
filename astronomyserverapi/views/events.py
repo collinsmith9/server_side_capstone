@@ -7,8 +7,9 @@ from rest_framework.response import Response
 from rest_framework import serializers, status
 from django.db.models import Q
 from datetime import datetime
+from astronomyserverapi.models.event_type import EventType
 from astronomyserverapi.serializers import EventSerializer, CreateEventSerializer
-from astronomyserverapi.models import Event
+from astronomyserverapi.models import Event, siteUser
 from django.core.files.base import ContentFile
 import base64
 import uuid
@@ -31,18 +32,21 @@ class EventView(ViewSet):
 
     def create(self, request):
         try:
+            theuser = siteUser.objects.get(pk=request.data["user"])
+            event_type = EventType.objects.get(pk=request.data["event_type"])
             format, imgstr = request.data["event_pic"].split(';base64,')
             ext = format.split('/')[-1]
-            data = ContentFile(base64.b64decode(imgstr), name=f'{request.data["username"]}-{uuid.uuid4()}.{ext}')
+            data = ContentFile(base64.b64decode(imgstr), name=f'{request.data["user"]}-{uuid.uuid4()}.{ext}')
             event = Event.objects.create(
-                user = request.data["user"],
+                user = theuser,
                 name = request.data["name"],
                 description = request.data["description"],
                 seen_from = request.data["seen_from"],
-                event_type = request.data["event_type"],
+                event_type = event_type,
                 is_approved = request.data["is_approved"],
                 event_pic = data
             )
+            return Response(None, status=status.HTTP_201_CREATED)
         except ValidationError as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
 
