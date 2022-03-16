@@ -5,7 +5,7 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = "__all__"
-        depth = 1
+        depth = 2
 
 class CreateEventSerializer(serializers.ModelSerializer):
     class Meta:
@@ -33,3 +33,8 @@ class EventTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventType
         fields = "__all__"
+
+class CreateEventTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EventType
+        fields = ['event_type']

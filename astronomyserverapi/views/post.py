@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework import serializers, status
 from django.db.models import Q
 from datetime import datetime
+from astronomyserverapi.models.category import Category
 from astronomyserverapi.serializers import PostSerializer, CreatePostSerializer
 from astronomyserverapi.models import Post
 from django.core.files.base import ContentFile
@@ -42,6 +43,7 @@ class PostView(ViewSet):
                 caption = request.data["caption"],
                 post_pic = data
             )
+            post.categories.set(request.data["categories"])
             return Response(None, status=status.HTTP_201_CREATED)
         except ValidationError as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
