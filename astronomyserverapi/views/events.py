@@ -13,6 +13,8 @@ from astronomyserverapi.models import Event, siteUser
 from django.core.files.base import ContentFile
 import base64
 import uuid
+from rest_framework.decorators import action
+
 
 
 
@@ -54,3 +56,13 @@ class EventView(ViewSet):
         event = Event.objects.get(pk=pk)
         event.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+    @action(methods=['put'], detail=True)
+    def approveevent(self, request, pk):
+        try:
+            event = Event.objects.get(pk=pk)
+            event.is_approved = 1
+            event.save()
+            return Response({'message: The event has now been approved.'}, status=status.HTTP_204_NO_CONTENT)
+        except Event.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)

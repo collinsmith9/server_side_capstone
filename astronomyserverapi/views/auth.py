@@ -25,11 +25,15 @@ def login_user(request):
 
     # If authentication was successful, respond with their token
     if authenticated_user is not None:
+        staff = False
+        if authenticated_user.is_staff == 1:
+            staff = True
         token = Token.objects.get(user=authenticated_user)
         data = {
             'valid': True,
             'token': token.key,
-            'userid': authenticated_user.siteuser.id
+            'userid': authenticated_user.siteuser.id,
+            'isStaff': staff
         }
         return Response(data)
     else:
@@ -66,5 +70,6 @@ def register_user(request):
     # Return the token to the client
     data = { 'token': token.key,
             'valid': True,
-            'userid': site_user.id}
+            'userid': site_user.id,
+            'isStaff': False}
     return Response(data, status.HTTP_201_CREATED)
