@@ -19,6 +19,11 @@ class PostLikesSerializer(serializers.ModelSerializer):
         fields = "__all__"
         depth = 1
 
+class CreatePostLikesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostLikes
+        fields = ['post', 'user']
+
 class PostCommentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostComments
