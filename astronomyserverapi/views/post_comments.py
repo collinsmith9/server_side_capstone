@@ -24,6 +24,9 @@ class PostCommentsView(ViewSet):
 
     def list(self, request):
         post_comments = PostComments.objects.all()
+        post = request.query_params.get("post", None)
+        if post is not None:
+            post_comments = post_comments.filter(post_id=post)
         serializer = PostCommentsSerializer(post_comments, many=True)
         return Response(serializer.data)
 
@@ -32,7 +35,7 @@ class PostCommentsView(ViewSet):
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def create(self, request, pk):
+    def create(self, request):
         serializer = CreatePostCommentsSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
