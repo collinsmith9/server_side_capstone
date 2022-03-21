@@ -7,3 +7,8 @@ class UserSerializer(serializers.ModelSerializer):
         model = siteUser
         fields = "__all__"
         depth = 2
+
+class CreateUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = siteUser
+        fields = ['bio']

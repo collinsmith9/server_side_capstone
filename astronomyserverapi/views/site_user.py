@@ -11,6 +11,7 @@ from django.db.models import Q
 from datetime import datetime
 from django.contrib.auth.models import User
 from astronomyserverapi.serializers import UserSerializer
+from astronomyserverapi.serializers.siteUser_serializer import CreateUserSerializer
 
 
 class UserView(ViewSet):
@@ -26,6 +27,25 @@ class UserView(ViewSet):
         user = siteUser.objects.all()
         serializer = UserSerializer(user, many=True)
         return Response(serializer.data)
+
+    def update(self, request, pk):
+        site_user = siteUser.objects.get(pk=pk)
+        serializer = CreateUserSerializer(site_user, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+        # try:
+        #     comment = Comment.objects.get(pk=pk)
+        #     serializer = CommentCreateSerializer(comment, data=request.data)
+        #     serializer.is_valid(raise_exception=True)
+        #     serializer.save()
+        #     return Response(None, status=status.HTTP_204_NO_CONTENT)
+        # except Comment.DoesNotExist as ex:
+        #     return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
     @action(methods=['put'], detail=True)
     def makeadmin(self, request, pk):
