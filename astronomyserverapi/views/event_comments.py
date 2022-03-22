@@ -24,6 +24,9 @@ class EventCommentsView(ViewSet):
 
     def list(self, request):
         event_comments = EventComments.objects.all()
+        event = request.query_params.get("event", None)
+        if event is not None:
+            event_comments = event_comments.filter(event_id=event)
         serializer = EventCommentsSerializer(event_comments, many=True)
         return Response(serializer.data)
 
@@ -32,7 +35,7 @@ class EventCommentsView(ViewSet):
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def create(self, request, pk):
+    def create(self, request):
         serializer = CreateEventCommentsSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
