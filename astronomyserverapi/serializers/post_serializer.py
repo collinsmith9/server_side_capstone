@@ -34,3 +34,8 @@ class CreatePostCommentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostComments
         fields = "__all__"
+
+class CreatePostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ['user', 'caption', 'categories', 'post_pic']

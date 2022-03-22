@@ -55,6 +55,33 @@ class PostView(ViewSet):
         post = Post.objects.get(pk=pk)
         post.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+    def update(self, request, pk):
+        post = Post.objects.get(pk=pk)
+        theuser = siteUser.objects.get(pk=request.data["user"])
+        format, imgstr = request.data["post_pic"].split(';base64,')
+        ext = format.split('/')[-1]
+        data = ContentFile(base64.b64decode(imgstr), name=f'{request.data["user"]}-{uuid.uuid4()}.{ext}')
+        updated_post = {
+            'user': request.data["user"],
+            'caption': request.data["caption"],
+            'post_pic': data
+        }
+        # post['post_pic'] = data
+        serializer = CreatePostSerializer(post, updated_post)
+        serializer.is_valid(raise_exception=True)
+        post = serializer.save()
+        # post.objects.update(
+        #     user = theuser,
+        #     caption = request.data["caption"],
+        #     post_pic = data
+        # )
+        post.categories.set(request.data["categories"])
+        
+        # post = request.data
+        # post.save()
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
+
         
 
 
