@@ -38,4 +38,4 @@ class CreatePostCommentsSerializer(serializers.ModelSerializer):
 class CreatePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ['user', 'caption', 'categories', 'post_pic']
+        fields = ['user', 'caption', 'categories']
